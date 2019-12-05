@@ -11,11 +11,12 @@
 #include <string>
 #include <pthread.h>
 
-#include <freertos/FreeRTOS.h>   // Include the base FreeRTOS definitions.
-#include <freertos/task.h>       // Include the task definitions.
-#include <freertos/semphr.h>     // Include the semaphore definitions.
-#include <freertos/ringbuf.h>    // Include the ringbuffer definitions.
-
+#include "freertos/FreeRTOS.h"   // Include the base FreeRTOS definitions.
+#include "freertos/task.h"       // Include the task definitions.
+#include "freertos/semphr.h"     // Include the semaphore definitions.
+extern "C" {
+#include "freertos/ringbuf.h"    // Include the ringbuffer definitions.
+}
 
 /**
  * @brief Interface to %FreeRTOS functions.
@@ -58,7 +59,7 @@ public:
  */
 class Ringbuffer {
 public:
-	Ringbuffer(size_t length, ringbuf_type_t type = RINGBUF_TYPE_NOSPLIT);
+	Ringbuffer(size_t length, RingbufferType_t type = RINGBUF_TYPE_NOSPLIT);
 	~Ringbuffer();
 
 	void*    receive(size_t* size, TickType_t wait = portMAX_DELAY);
