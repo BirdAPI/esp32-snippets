@@ -24,9 +24,7 @@
 #include <sstream>
 #include <iomanip>
 
-#ifdef ARDUINO_ARCH_ESP32
-#include "esp32-hal-log.h"
-#endif
+
 
 static const char* LOG_TAG = "BLEUtils";  // Tag for logging.
 

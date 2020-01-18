@@ -18,13 +18,8 @@
 #include "BLEUtils.h"
 #include "BLE2902.h"
 #include "GeneralUtils.h"
-#if defined(ARDUINO_ARCH_ESP32) && defined(CONFIG_ARDUHAL_ESP_LOG)
-#include "esp32-hal-log.h"
-#define LOG_TAG ""
-#else
 #include "esp_log.h"
 static const char* LOG_TAG = "BLECharacteristic";
-#endif
 
 #define NULL_HANDLE (0xffff)
 

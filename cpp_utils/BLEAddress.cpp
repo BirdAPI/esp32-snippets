@@ -13,9 +13,6 @@
 #include <iomanip>
 #include <string.h>
 #include <stdio.h>
-#ifdef ARDUINO_ARCH_ESP32
-#include "esp32-hal-log.h"
-#endif
 
 
 /**
