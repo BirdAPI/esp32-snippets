@@ -488,10 +488,12 @@ void BLECharacteristic::notify(bool is_notification) {
 	assert(getService() != nullptr);
 	assert(getService()->getServer() != nullptr);
 
+#if CONFIG_LOG_DEFAULT_LEVEL >= ESP_LOG_LEVEL_VERBOSE
 	GeneralUtils::hexDump((uint8_t*)m_value.getValue().data(), m_value.getValue().length());
+#endif
 
 	if (getService()->getServer()->getConnectedCount() == 0) {
-		ESP_LOGD(LOG_TAG, "<< notify: No connected clients.");
+		ESP_LOGW(LOG_TAG, "<< notify: No connected clients.");
 		return;
 	}
 
@@ -503,18 +505,20 @@ void BLECharacteristic::notify(bool is_notification) {
 		ESP_LOGE(LOG_TAG, "Characteristic without 0x2902 descriptor");
 		return;
 	}
+
 	if(is_notification) {
-		if (p2902 != nullptr && !p2902->getNotifications()) {
+		if (!p2902->getNotifications()) {
 			ESP_LOGD(LOG_TAG, "<< notifications disabled; ignoring");
 			return;
 		}
 	}
 	else{
-		if (p2902 != nullptr && !p2902->getIndications()) {
+		if (!p2902->getIndications()) {
 			ESP_LOGD(LOG_TAG, "<< indications disabled; ignoring");
 			return;
 		}
 	}
+
 	for (auto &myPair : getService()->getServer()->getPeerDevices(false)) {
 		uint16_t _mtu = (myPair.second.mtu);
 		if (m_value.getValue().length() > _mtu - 3) {
@@ -633,9 +637,12 @@ void BLECharacteristic::setReadProperty(bool value) {
  * @param [in] length The length of the data in bytes.
  */
 void BLECharacteristic::setValue(uint8_t* data, size_t length) {
-	char* pHex = BLEUtils::buildHexData(nullptr, data, length);
+#if CONFIG_LOG_DEFAULT_LEVEL >= ESP_LOG_LEVEL_DEBUG
+  char* pHex = BLEUtils::buildHexData(nullptr, data, length);
 	ESP_LOGD(LOG_TAG, ">> setValue: length=%d, data=%s, characteristic UUID=%s", length, pHex, getUUID().toString().c_str());
 	free(pHex);
+#endif
+
 	if (length > ESP_GATT_MAX_ATTR_LEN) {
 		ESP_LOGE(LOG_TAG, "Size %d too large, must be no bigger than %d", length, ESP_GATT_MAX_ATTR_LEN);
 		return;
